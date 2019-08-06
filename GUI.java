@@ -7,20 +7,27 @@ import java.awt.event.MouseEvent;
 
 public class GUI extends JFrame {
 
+  // The gaps between the each cell
   int spacing = 5;
 
+  // The coordinates of the mouse
   public int mouseX = 0;
   public int mouseY = 0;
 
   public GUI() {
+
     this.setTitle("Minesweeper");
+    // Game is meant to be 1200x800 but the top bar of the window is 26 px tall
+    // and the sides of the window are approx 3px each
     this.setSize(1286,837);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setVisible(true);
 
+    // The actual game board
     gameArea game = new gameArea();
     this.setContentPane(game);
 
+    // Action listeners for mouse movement and clicking
     Move move = new Move();
     this.addMouseMotionListener(move);
 
@@ -34,6 +41,7 @@ public class GUI extends JFrame {
       g.setColor(Color.DARK_GRAY);
       g.fillRect(0, 0, 1280, 900);
 
+      // Currently the cells are hardcoded to be a 16x9 grid
       for (int i = 0; i < 16; i++) {
         for (int j = 0; j < 9; j++) {
 
@@ -41,12 +49,13 @@ public class GUI extends JFrame {
           int yCoord = spacing + j*80 + 80;
           int width = 80 - 2*spacing;
 
+          // The cells default colour is grey but if the mouse is hovering over
+          // the cell it changes to light great
           g.setColor(Color.GRAY);
           if (mouseX >= xCoord && mouseX < (xCoord+width)) {
             if (mouseY >= yCoord+26 && mouseY < (yCoord+width+26))
               g.setColor(Color.LIGHT_GRAY);
           }
-
 
           g.fillRect(xCoord , yCoord, width, width);
         } // for
