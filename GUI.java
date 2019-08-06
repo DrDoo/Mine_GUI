@@ -13,9 +13,9 @@ public class GUI extends JFrame {
   // The coordinates of the mouse
   public int mouseX = 0;
   public int mouseY = 0;
-  
+
   Random rand = new Random();
-  
+
   int[][] mines = new int[16][9];
   int[][] neighbours = new int [16][9];
   boolean revealed[][] = new boolean [16][9];
@@ -30,19 +30,19 @@ public class GUI extends JFrame {
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setVisible(true);
     this.setResizable(false);
-    
-    
+
+
     // Places the mines randomly
     for (int i = 0; i < 16; i++) {
-        for (int j = 0; j < 9; j++) {
-        	if (rand.nextInt(100) < 20) {
-        		mines[i][j] = 1;
-          }
-        	else {
-        		mines[i][j] = 0;
-        	}
-        } // for
+      for (int j = 0; j < 9; j++) {
+      	if (rand.nextInt(100) < 20) {
+      		mines[i][j] = 1;
+        }
+      	else {
+      		mines[i][j] = 0;
+      	}
       } // for
+    } // for
 
     // The actual game board
     gameArea game = new gameArea();
@@ -109,6 +109,9 @@ public class GUI extends JFrame {
     @Override
     public void mouseClicked (MouseEvent e) {
       // System.out.println("Click Works");
+      if (inBoxX() != -1 && inBoxY() != -1)
+        System.out.println("Cell [" + inBoxX() + "," + inBoxY() +  "]");
+      else System.out.println("The mouse isnt in a cell");
     }
 
     @Override
@@ -130,6 +133,42 @@ public class GUI extends JFrame {
     public void mouseReleased(MouseEvent arg0) {
 
     }
+
+    public int inBoxX() {
+
+      for (int i = 0; i < 16; i++) {
+        for (int j = 0; j < 9; j++) {
+
+          int xCoord = spacing + i*80;
+          int yCoord = spacing + j*80 + 80;
+          int width = 80 - 2*spacing;
+
+          if (mouseX >= xCoord && mouseX < (xCoord+width)) {
+            if (mouseY >= yCoord+26 && mouseY < (yCoord+width+26))
+              return i;
+          } // if
+        } // for
+      } // for
+      return -1;
+    } // inBoxX
+
+    public int inBoxY() {
+
+      for (int i = 0; i < 16; i++) {
+        for (int j = 0; j < 9; j++) {
+
+          int xCoord = spacing + i*80;
+          int yCoord = spacing + j*80 + 80;
+          int width = 80 - 2*spacing;
+
+          if (mouseX >= xCoord && mouseX < (xCoord+width)) {
+            if (mouseY >= yCoord+26 && mouseY < (yCoord+width+26))
+              return j;
+          } // if
+        } // for
+      } // for
+      return -1;
+    } // inBoxY
 
 
   }
