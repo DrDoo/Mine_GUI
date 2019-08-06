@@ -13,6 +13,13 @@ public class GUI extends JFrame {
   // The coordinates of the mouse
   public int mouseX = 0;
   public int mouseY = 0;
+  
+  Random rand = new Random();
+  
+  int[][] mines = new int[16][9];
+  int[][] neighbours = new int [16][9];
+  boolean revealed[][] = new boolean [16][9];
+  boolean flagged[][] = new boolean [16][9];
 
   public GUI() {
 
@@ -22,6 +29,20 @@ public class GUI extends JFrame {
     this.setSize(1286,837);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setVisible(true);
+    this.setResizable(false);
+    
+    
+    // Places the mines randomly
+    for (int i = 0; i < 16; i++) {
+        for (int j = 0; j < 9; j++) {
+        	if (rand.nextInt(100) < 20) {
+        		mines[i][j] = 1;
+          }
+        	else {
+        		mines[i][j] = 0;
+        	}
+        } // for
+      } // for
 
     // The actual game board
     gameArea game = new gameArea();
@@ -52,6 +73,10 @@ public class GUI extends JFrame {
           // The cells default colour is grey but if the mouse is hovering over
           // the cell it changes to light great
           g.setColor(Color.GRAY);
+          /*
+          if (mines[i][j] == 1)
+        	  g.setColor(Color.YELLOW);
+          */
           if (mouseX >= xCoord && mouseX < (xCoord+width)) {
             if (mouseY >= yCoord+26 && mouseY < (yCoord+width+26))
               g.setColor(Color.LIGHT_GRAY);
