@@ -10,12 +10,18 @@ public class GUI extends JFrame {
   // The gaps between the each cell
   int spacing = 5;
 
+  int neighs= 0;
+
   // The coordinates of the mouse
   public int mouseX = 0;
   public int mouseY = 0;
 
+  // Tool for choosing random numbers
   Random rand = new Random();
 
+  // Arrays to hold reference to the mine locations, the number of bordering
+  // mines for each cell, whether the cell has been revealed and whether it has
+  // been flagged
   int[][] mines = new int[16][9];
   int[][] neighbours = new int [16][9];
   boolean revealed[][] = new boolean [16][9];
@@ -41,6 +47,26 @@ public class GUI extends JFrame {
       	else {
       		mines[i][j] = 0;
       	}
+        revealed[i][j] = false;
+      } // for
+    } // for
+
+    // Figures out how many bordering mines there are for each cell
+    for (int i = 0; i < 16; i++) {
+      for (int j = 0; j < 9; j++) {
+        // Number initialised to 0 for each cell
+        neighs = 0;
+        for (int m = 0; m < 16; m++) {
+          for (int n = 0; n < 9; n++) {
+            // Here we make sure were not comparing a cell to itself. If the
+            // bordering cell does contain a mine the number of neigs goes up
+            if (!(m==i && n==j))
+              if (isNeighbour(i, j, m, n) == true)
+                neighs++;
+          } // for
+        } // for
+        // The number of bordering mines is placed into the array
+        neighbours[i][j] = neighs;
       } // for
     } // for
 
@@ -73,10 +99,13 @@ public class GUI extends JFrame {
           // The cells default colour is grey but if the mouse is hovering over
           // the cell it changes to light great
           g.setColor(Color.GRAY);
-          /*
-          if (mines[i][j] == 1)
+
+          // This bit is for debugging/testing
+          if (mines[i][j] == 1) {
         	  g.setColor(Color.YELLOW);
-          */
+          }
+
+          // If the mouse is hovering over a cell its colour is changed
           if (mouseX >= xCoord && mouseX < (xCoord+width)) {
             if (mouseY >= yCoord+26 && mouseY < (yCoord+width+26))
               g.setColor(Color.LIGHT_GRAY);
@@ -92,7 +121,6 @@ public class GUI extends JFrame {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-
     }
 
     @Override
@@ -102,74 +130,92 @@ public class GUI extends JFrame {
       mouseX = e.getX();
     }
 
-  } // Click
+  } // Move
 
   public class Click implements MouseListener {
 
     @Override
     public void mouseClicked (MouseEvent e) {
-      // System.out.println("Click Works");
+
+      // If a cell is clicked it is marked as being revealed
       if (inBoxX() != -1 && inBoxY() != -1)
+        revealed[inBoxX()][inBoxY()] = true;
+
+      // This bit is for debugging/testing
+      if (inBoxX() != -1 && inBoxY() != -1) {
         System.out.println("Cell [" + inBoxX() + "," + inBoxY() +  "]");
+        System.out.println("Neighbours : " + neighbours[inBoxX()][inBoxY()]);
+      }
       else System.out.println("The mouse isnt in a cell");
     }
 
     @Override
     public void mouseEntered (MouseEvent arg0) {
-
     }
 
     @Override
     public void mouseExited (MouseEvent arg0) {
-
     }
 
     @Override
     public void mousePressed (MouseEvent arg0) {
-
     }
 
     @Override
     public void mouseReleased(MouseEvent arg0) {
-
     }
 
-    public int inBoxX() {
+  } // Click
 
-      for (int i = 0; i < 16; i++) {
-        for (int j = 0; j < 9; j++) {
+  // Method to see which collumn the mouse is clicking on
+  public int inBoxX() {
 
-          int xCoord = spacing + i*80;
-          int yCoord = spacing + j*80 + 80;
-          int width = 80 - 2*spacing;
+    for (int i = 0; i < 16; i++) {
+      for (int j = 0; j < 9; j++) {
 
-          if (mouseX >= xCoord && mouseX < (xCoord+width)) {
-            if (mouseY >= yCoord+26 && mouseY < (yCoord+width+26))
-              return i;
-          } // if
-        } // for
+        int xCoord = spacing + i*80;
+        int yCoord = spacing + j*80 + 80;
+        int width = 80 - 2*spacing;
+
+        if (mouseX >= xCoord && mouseX < (xCoord+width)) {
+          if (mouseY >= yCoord+26 && mouseY < (yCoord+width+26))
+            return i;
+        } // if
       } // for
-      return -1;
-    } // inBoxX
+    } // for
+    return -1;
+  } // inBoxX
 
-    public int inBoxY() {
+  // Method to see which row the mouse is clicking on
+  public int inBoxY() {
 
-      for (int i = 0; i < 16; i++) {
-        for (int j = 0; j < 9; j++) {
+    for (int i = 0; i < 16; i++) {
+      for (int j = 0; j < 9; j++) {
 
-          int xCoord = spacing + i*80;
-          int yCoord = spacing + j*80 + 80;
-          int width = 80 - 2*spacing;
+        int xCoord = spacing + i*80;
+        int yCoord = spacing + j*80 + 80;
+        int width = 80 - 2*spacing;
 
-          if (mouseX >= xCoord && mouseX < (xCoord+width)) {
-            if (mouseY >= yCoord+26 && mouseY < (yCoord+width+26))
-              return j;
-          } // if
-        } // for
+        if (mouseX >= xCoord && mouseX < (xCoord+width)) {
+          if (mouseY >= yCoord+26 && mouseY < (yCoord+width+26))
+            return j;
+        } // if
       } // for
-      return -1;
-    } // inBoxY
+    } // for
+    return -1;
+  } // inBoxY
+
+  // This is used to see if a bordering cell contains a mine
+  public boolean isNeighbour(int cellX, int cellY, int otherX, int otherY) {
+
+    // We loop through all cells untill we reach cells a distance of 1 away, if
+    // this cell contains a mine then the check passes
+    if ((cellX - otherX < 2) && (cellX - otherX > -2)
+        && (cellY - otherY < 2) && (cellY - otherY > -2)
+        && mines[otherX][otherY] == 1)
+      return true;
+    return false;
+  } // isNeighbour
 
 
-  }
 } // GUI
