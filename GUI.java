@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import java.util.*;
 import java.awt.*;
@@ -7,11 +8,6 @@ import java.awt.event.MouseEvent;
 
 public class GUI extends JFrame {
 
-  // The gaps between the each cell
-  int spacing = 5;
-
-  int neighs= 0;
-
   // The coordinates of the mouse
   public int mouseX = 0;
   public int mouseY = 0;
@@ -19,11 +15,17 @@ public class GUI extends JFrame {
   // Tool for choosing random numbers
   Random rand = new Random();
 
+  // The gaps between the each cell
+  int spacing = 5;
+
+  // The number of bordering mines
+  int borderingMines= 0;
+
   // Arrays to hold reference to the mine locations, the number of bordering
   // mines for each cell, whether the cell has been revealed and whether it has
   // been flagged
   int[][] mines = new int[16][9];
-  int[][] neighbours = new int [16][9];
+  int[][] borderMines = new int [16][9];
   boolean revealed[][] = new boolean [16][9];
   boolean flagged[][] = new boolean [16][9];
 
@@ -38,9 +40,11 @@ public class GUI extends JFrame {
     this.setResizable(false);
 
 
-    // Places the mines randomly
+    // Chooses the mine locations randomly
     for (int i = 0; i < 16; i++) {
       for (int j = 0; j < 9; j++) {
+
+        // The value here determines the percentage of cells that are mines
       	if (rand.nextInt(100) < 20) {
       		mines[i][j] = 1;
         }
@@ -55,18 +59,18 @@ public class GUI extends JFrame {
     for (int i = 0; i < 16; i++) {
       for (int j = 0; j < 9; j++) {
         // Number initialised to 0 for each cell
-        neighs = 0;
+        borderingMines = 0;
         for (int m = 0; m < 16; m++) {
           for (int n = 0; n < 9; n++) {
             // Here we make sure were not comparing a cell to itself. If the
-            // bordering cell does contain a mine the number of neigs goes up
+            // bordering cell contains a mine then the number goes up
             if (!(m==i && n==j))
               if (isNeighbour(i, j, m, n) == true)
-                neighs++;
+                borderingMines++;
           } // for
         } // for
         // The number of bordering mines is placed into the array
-        neighbours[i][j] = neighs;
+        borderMines[i][j] = borderingMines;
       } // for
     } // for
 
@@ -77,16 +81,15 @@ public class GUI extends JFrame {
     // Action listeners for mouse movement and clicking
     Move move = new Move();
     this.addMouseMotionListener(move);
-
     Click click = new Click();
     this.addMouseListener(click);
   } // Constructor
 
   public class gameArea extends JPanel  {
 
-    public void paintComponent(Graphics g) {
-      g.setColor(Color.DARK_GRAY);
-      g.fillRect(0, 0, 1280, 900);
+    public void paintComponent(Graphics graphics) {
+      graphics.setColor(Color.DARK_GRAY);
+      graphics.fillRect(0, 0, 1280, 900);
 
       // Currently the cells are hardcoded to be a 16x9 grid
       for (int i = 0; i < 16; i++) {
@@ -98,20 +101,20 @@ public class GUI extends JFrame {
 
           // The cells default colour is grey but if the mouse is hovering over
           // the cell it changes to light great
-          g.setColor(Color.GRAY);
+          graphics.setColor(Color.GRAY);
 
           // This bit is for debugging/testing
           if (mines[i][j] == 1) {
-        	  g.setColor(Color.YELLOW);
+        	  graphics.setColor(Color.YELLOW);
           }
 
           // If the mouse is hovering over a cell its colour is changed
           if (mouseX >= xCoord && mouseX < (xCoord+width)) {
             if (mouseY >= yCoord+26 && mouseY < (yCoord+width+26))
-              g.setColor(Color.LIGHT_GRAY);
+              graphics.setColor(Color.LIGHT_GRAY);
           }
 
-          g.fillRect(xCoord , yCoord, width, width);
+          graphics.fillRect(xCoord , yCoord, width, width);
         } // for
       } // for
     } // paintComponent
@@ -120,14 +123,14 @@ public class GUI extends JFrame {
   public class Move implements MouseMotionListener {
 
     @Override
-    public void mouseDragged(MouseEvent e) {
+    public void mouseDragged(MouseEvent event) {
     }
 
     @Override
-    public void mouseMoved (MouseEvent e) {
+    public void mouseMoved (MouseEvent event) {
       // System.out.println("Move Works");
-      mouseY = e.getY();
-      mouseX = e.getX();
+      mouseY = event.getY();
+      mouseX = event.getX();
     }
 
   } // Move
@@ -144,7 +147,7 @@ public class GUI extends JFrame {
       // This bit is for debugging/testing
       if (inBoxX() != -1 && inBoxY() != -1) {
         System.out.println("Cell [" + inBoxX() + "," + inBoxY() +  "]");
-        System.out.println("Neighbours : " + neighbours[inBoxX()][inBoxY()]);
+        System.out.println("Neighbours : " + borderMines[inBoxX()][inBoxY()]);
       }
       else System.out.println("The mouse isnt in a cell");
     }
