@@ -37,7 +37,7 @@ public class GUI extends JFrame {
     this.setSize(1286,837);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setVisible(true);
-    this.setResizable(false);
+    //this.setResizable(false);
 
 
     // Chooses the mine locations randomly
@@ -89,7 +89,7 @@ public class GUI extends JFrame {
 
     public void paintComponent(Graphics graphics) {
       graphics.setColor(Color.DARK_GRAY);
-      graphics.fillRect(0, 0, 1280, 900);
+      graphics.fillRect(0, 0, 1290, 850);
 
       // Currently the cells are hardcoded to be a 16x9 grid
       for (int i = 0; i < 16; i++) {
@@ -108,6 +108,13 @@ public class GUI extends JFrame {
         	  graphics.setColor(Color.YELLOW);
           }
 
+          if (revealed[i][j] == true) {
+        	  graphics.setColor(Color.WHITE);
+            if (mines[i][j] == 1) {
+              graphics.setColor(Color.RED);
+            }
+          }
+
           // If the mouse is hovering over a cell its colour is changed
           if (mouseX >= xCoord && mouseX < (xCoord+width)) {
             if (mouseY >= yCoord+26 && mouseY < (yCoord+width+26))
@@ -115,6 +122,56 @@ public class GUI extends JFrame {
           }
 
           graphics.fillRect(xCoord , yCoord, width, width);
+
+          // If a cell has been revlealed we either show the number of border
+          // mines for the mine itself
+          if (revealed[i][j] == true) {
+            // If the cell is not a mine, show the number of border mines
+            if (mines[i][j] == 0) {
+              // The switch colour codes the number
+              switch (borderMines[i][j]) {
+                case 0:
+                  graphics.setColor(Color.BLACK);
+                  break;
+                case 1:
+                  graphics.setColor(Color.BLUE);
+                  break;
+                case 2:
+                  graphics.setColor(Color.GREEN);
+                  break;
+                case 3:
+                  graphics.setColor(Color.RED);
+                  break;
+                case 4:
+                  graphics.setColor(Color.MAGENTA); // Purple
+                  break;
+                case 5:
+                  graphics.setColor(Color.BLACK);
+                  break;
+                case 6:
+                  graphics.setColor(Color.ORANGE); // Maroon
+                  break;
+                case 7:
+                  graphics.setColor(Color.GRAY);
+                  break;
+                case 8:
+                  graphics.setColor(Color.CYAN); // Turquoise
+                  break;
+              } // switch
+              graphics.setFont(new Font("Ubuntu Mono", Font.BOLD, 40));
+              if (borderMines[i][j] != 0)
+                graphics.drawString(""+borderMines[i][j], xCoord+27, yCoord+50);
+            } // if
+            // If the cell is a mine, show the mine
+            else if (mines[i][j] == 1) {
+              graphics.setColor(Color.BLACK);
+              graphics.fillRect(xCoord+25, yCoord+15, 20, 40);
+              graphics.fillRect(xCoord+15, yCoord+25, 40, 20);
+              graphics.fillRect(xCoord+20, yCoord+20, 30, 30);
+              graphics.fillRect(xCoord+33, yCoord+10, 4, 50);
+              graphics.fillRect(xCoord+10, yCoord+33, 50, 4);
+            }
+          } // if
         } // for
       } // for
     } // paintComponent
