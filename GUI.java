@@ -12,6 +12,10 @@ public class GUI extends JFrame {
   public int mouseX = 0;
   public int mouseY = 0;
 
+  // Coordinates for the reset button
+  public int resetX = 600;
+  public int resetY = 5;
+
   // Tool for choosing random numbers
   Random rand = new Random();
 
@@ -174,6 +178,15 @@ public class GUI extends JFrame {
           } // if
         } // for
       } // for
+
+      // The rest button
+      graphics.setColor(Color.LIGHT_GRAY);
+      graphics.fillRect(resetX, resetY, 160, 70);
+      graphics.setColor(Color.BLACK);
+      graphics.setFont(new Font("Ubuntu Mono", Font.BOLD, 40));
+      graphics.drawString("Reset?", resetX+20, resetY+47);
+
+
     } // paintComponent
   } // gameArea
 
