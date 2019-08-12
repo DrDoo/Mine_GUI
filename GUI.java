@@ -19,6 +19,11 @@ public class GUI extends JFrame {
   // Tool for choosing random numbers
   Random rand = new Random();
 
+  // Game state booleans. Initialised as false as the player has neither won or
+  // lost at the start of the game
+  public boolean won = false;
+  public boolean lost = false;
+
   // The gaps between the each cell
   int spacing = 5;
 
@@ -107,11 +112,6 @@ public class GUI extends JFrame {
           // the cell it changes to light great
           graphics.setColor(Color.GRAY);
 
-          // This bit is for debugging/testing
-          if (mines[i][j] == 1) {
-        	  graphics.setColor(Color.YELLOW);
-          }
-
           if (revealed[i][j] == true) {
         	  graphics.setColor(Color.WHITE);
             if (mines[i][j] == 1) {
@@ -121,8 +121,11 @@ public class GUI extends JFrame {
 
           // If the mouse is hovering over a cell its colour is changed
           if (mouseX >= xCoord && mouseX < (xCoord+width)) {
-            if (mouseY >= yCoord+26 && mouseY < (yCoord+width+26))
-              graphics.setColor(Color.LIGHT_GRAY);
+            if (mouseY >= yCoord+26 && mouseY < (yCoord+width+26)) {
+              if (!revealed[i][j])
+                graphics.setColor(Color.LIGHT_GRAY);
+            }
+
           }
 
           graphics.fillRect(xCoord , yCoord, width, width);
@@ -220,6 +223,9 @@ public class GUI extends JFrame {
         System.out.println("Neighbours : " + borderMines[inBoxX()][inBoxY()]);
       }
       else System.out.println("The mouse isnt in a cell");
+
+      if (inReset())
+        reset();
     }
 
     @Override
@@ -239,6 +245,56 @@ public class GUI extends JFrame {
     }
 
   } // Click
+
+  public void reset() {
+    won = false;
+    lost = false;
+
+    // Chooses the mine locations randomly
+    for (int i = 0; i < 16; i++) {
+      for (int j = 0; j < 9; j++) {
+
+        //We replace all the mines
+        // The value here determines the percentage of cells that are mines
+      	if (rand.nextInt(100) < 20) {
+      		mines[i][j] = 1;
+        }
+      	else {
+      		mines[i][j] = 0;
+      	}
+        revealed[i][j] = false;
+        // All mines are unflagged
+        flagged[i][j] = false;
+      } // for
+    } // for
+
+    // Figures out how many bordering mines there are for each cell
+    for (int i = 0; i < 16; i++) {
+      for (int j = 0; j < 9; j++) {
+        // Number initialised to 0 for each cell
+        borderingMines = 0;
+        for (int m = 0; m < 16; m++) {
+          for (int n = 0; n < 9; n++) {
+            // Here we make sure were not comparing a cell to itself. If the
+            // bordering cell contains a mine then the number goes up
+            if (!(m==i && n==j))
+              if (isNeighbour(i, j, m, n) == true)
+                borderingMines++;
+          } // for
+        } // for
+        // The number of bordering mines is placed into the array
+        borderMines[i][j] = borderingMines;
+      } // for
+    } // for
+  }
+
+  public boolean inReset() {
+    if (mouseX >= resetX && mouseX < resetX + 160) {
+      if (mouseY >= resetY && mouseY < resetY + 110)
+        return true;
+    }
+    return false;
+  }
 
   // Method to see which collumn the mouse is clicking on
   public int inBoxX() {
