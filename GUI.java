@@ -48,6 +48,13 @@ public class GUI extends JFrame {
     this.setVisible(true);
     //this.setResizable(false);
 
+    /*
+██ ███    ██ ██ ████████
+██ ████   ██ ██    ██
+██ ██ ██  ██ ██    ██
+██ ██  ██ ██ ██    ██
+██ ██   ████ ██    ██
+*/
 
     // Chooses the mine locations randomly
     for (int i = 0; i < 16; i++) {
@@ -193,6 +200,16 @@ public class GUI extends JFrame {
     } // paintComponent
   } // gameArea
 
+  /*
+███    ███  ██████  ██    ██ ███████
+████  ████ ██    ██ ██    ██ ██
+██ ████ ██ ██    ██ ██    ██ █████
+██  ██  ██ ██    ██  ██  ██  ██
+██      ██  ██████    ████   ███████
+*/
+
+
+
   public class Move implements MouseMotionListener {
 
     @Override
@@ -207,6 +224,16 @@ public class GUI extends JFrame {
     }
 
   } // Move
+
+  /*
+ ██████ ██      ██  ██████ ██   ██
+██      ██      ██ ██      ██  ██
+██      ██      ██ ██      █████
+██      ██      ██ ██      ██  ██
+ ██████ ███████ ██  ██████ ██   ██
+*/
+
+
 
   public class Click implements MouseListener {
 
@@ -245,6 +272,16 @@ public class GUI extends JFrame {
     }
 
   } // Click
+
+  /*
+██████  ███████ ███████ ███████ ████████
+██   ██ ██      ██      ██         ██
+██████  █████   ███████ █████      ██
+██   ██ ██           ██ ██         ██
+██   ██ ███████ ███████ ███████    ██
+*/
+
+
 
   public void reset() {
     won = false;
@@ -296,6 +333,16 @@ public class GUI extends JFrame {
     return false;
   }
 
+  /*
+██ ███    ██     ██████   ██████  ██   ██
+██ ████   ██     ██   ██ ██    ██  ██ ██
+██ ██ ██  ██     ██████  ██    ██   ███
+██ ██  ██ ██     ██   ██ ██    ██  ██ ██
+██ ██   ████     ██████   ██████  ██   ██
+*/
+
+
+
   // Method to see which collumn the mouse is clicking on
   public int inBoxX() {
 
@@ -333,6 +380,16 @@ public class GUI extends JFrame {
     } // for
     return -1;
   } // inBoxY
+
+  /*
+██ ███████     ███    ██ ███████ ██  ██████  ██   ██ ██████   ██████  ██    ██ ██████
+██ ██          ████   ██ ██      ██ ██       ██   ██ ██   ██ ██    ██ ██    ██ ██   ██
+██ ███████     ██ ██  ██ █████   ██ ██   ███ ███████ ██████  ██    ██ ██    ██ ██████
+██      ██     ██  ██ ██ ██      ██ ██    ██ ██   ██ ██   ██ ██    ██ ██    ██ ██   ██
+██ ███████     ██   ████ ███████ ██  ██████  ██   ██ ██████   ██████   ██████  ██   ██
+*/
+
+
 
   // This is used to see if a bordering cell contains a mine
   public boolean isNeighbour(int cellX, int cellY, int otherX, int otherY) {
