@@ -243,15 +243,9 @@ public class GUI extends JFrame {
       // If a cell is clicked it is marked as being revealed
       if (inBoxX() != -1 && inBoxY() != -1) {
         revealed[inBoxX()][inBoxY()] = true;
-        if (borderMines[inBoxX()][inBoxY()] == 0) {
-          for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 9; j++) {
-              if ((inBoxX() - i < 2) && (inBoxX() - i > -2)
-                  && (inBoxY() - j < 2) && (inBoxY() - j > -2)
-                  && mines[inBoxX()][inBoxY()] == 0)
-                revealed[i][j] = true;
-            }
-          }
+        if (borderMines[inBoxX()][inBoxY()] == 0
+            && mines[inBoxX()][inBoxY()] == 0) {
+          openEmpties(inBoxX(), inBoxY());
         }
       }
 
@@ -413,6 +407,41 @@ public class GUI extends JFrame {
       return true;
     return false;
   } // isNeighbour
+
+  public void openEmpties(int cellX, int cellY) {
+
+    for (int i = 0; i < 16; i++) {
+      for (int j = 0; j < 9; j++) {
+        System.out.println("Cell : " + i + "," + j);
+        if ((cellX - i < 2) && (cellX - i > -2)
+            && (cellY - j < 2) && (cellY - j > -2)
+            && mines[cellX][cellY] == 0) {
+          if (borderMines[i][j] == 0 && revealed[i][j] == false) {
+            if (!(cellX==i && cellY==j)) {
+              openEmpties(i, j);
+            }
+          }
+          revealed[i][j] = true;
+          /*
+          if (borderMines[i][j] == 0)
+            openEmpties(i, j);
+          revealed[i][j] = true;
+          */
+        }
+      }
+    }
+
+    /*
+    for (int i = 0; i < 16; i++) {
+      for (int j = 0; j < 9; j++) {
+        if ((inBoxX() - i < 2) && (inBoxX() - i > -2)
+            && (inBoxY() - j < 2) && (inBoxY() - j > -2)
+            && mines[inBoxX()][inBoxY()] == 0)
+          revealed[i][j] = true;
+      }
+    }
+    */
+  }
 
 
 } // GUI
