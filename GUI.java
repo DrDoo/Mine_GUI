@@ -270,7 +270,7 @@ public class GUI extends JFrame {
       if (SwingUtilities.isLeftMouseButton(e)) {
 
         // If a cell is clicked it is marked as being revealed
-        if (inBoxX() != -1 && inBoxY() != -1) {
+        if (inBoxX() != -1 && inBoxY() != -1 && !flagged[inBoxX()][inBoxY()]) {
           revealed[inBoxX()][inBoxY()] = true;
           if (borderMines[inBoxX()][inBoxY()] == 0
               && mines[inBoxX()][inBoxY()] == 0) {
