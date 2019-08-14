@@ -241,8 +241,19 @@ public class GUI extends JFrame {
     public void mouseClicked (MouseEvent e) {
 
       // If a cell is clicked it is marked as being revealed
-      if (inBoxX() != -1 && inBoxY() != -1)
+      if (inBoxX() != -1 && inBoxY() != -1) {
         revealed[inBoxX()][inBoxY()] = true;
+        if (borderMines[inBoxX()][inBoxY()] == 0) {
+          for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 9; j++) {
+              if ((inBoxX() - i < 2) && (inBoxX() - i > -2)
+                  && (inBoxY() - j < 2) && (inBoxY() - j > -2)
+                  && mines[inBoxX()][inBoxY()] == 0)
+                revealed[i][j] = true;
+            }
+          }
+        }
+      }
 
       // This bit is for debugging/testing
       if (inBoxX() != -1 && inBoxY() != -1) {
