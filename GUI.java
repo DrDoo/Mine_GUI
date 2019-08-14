@@ -126,10 +126,13 @@ public class GUI extends JFrame {
             }
           }
 
+          if (flagged[i][j] == true)
+            graphics.setColor(Color.YELLOW);
+
           // If the mouse is hovering over a cell its colour is changed
           if (mouseX >= xCoord && mouseX < (xCoord+width)) {
             if (mouseY >= yCoord+26 && mouseY < (yCoord+width+26)) {
-              if (!revealed[i][j])
+              if (!revealed[i][j] && !flagged[i][j])
                 graphics.setColor(Color.LIGHT_GRAY);
             }
 
@@ -240,14 +243,7 @@ public class GUI extends JFrame {
     @Override
     public void mouseClicked (MouseEvent e) {
 
-      // If a cell is clicked it is marked as being revealed
-      if (inBoxX() != -1 && inBoxY() != -1) {
-        revealed[inBoxX()][inBoxY()] = true;
-        if (borderMines[inBoxX()][inBoxY()] == 0
-            && mines[inBoxX()][inBoxY()] == 0) {
-          openEmpties(inBoxX(), inBoxY());
-        }
-      }
+
 
       // This bit is for debugging/testing
       if (inBoxX() != -1 && inBoxY() != -1) {
@@ -256,8 +252,7 @@ public class GUI extends JFrame {
       }
       else System.out.println("The mouse isnt in a cell");
 
-      if (inReset())
-        reset();
+
     }
 
     @Override
@@ -269,7 +264,30 @@ public class GUI extends JFrame {
     }
 
     @Override
-    public void mousePressed (MouseEvent arg0) {
+    public void mousePressed (MouseEvent e) {
+
+      // Left Click interacts with objects
+      if (SwingUtilities.isLeftMouseButton(e)) {
+
+        // If a cell is clicked it is marked as being revealed
+        if (inBoxX() != -1 && inBoxY() != -1) {
+          revealed[inBoxX()][inBoxY()] = true;
+          if (borderMines[inBoxX()][inBoxY()] == 0
+              && mines[inBoxX()][inBoxY()] == 0) {
+            openEmpties(inBoxX(), inBoxY());
+          }
+        }
+        if (inReset())
+          reset();
+
+      }
+
+      // Right click flags cells
+      if (SwingUtilities.isRightMouseButton(e)) {
+        if (inBoxX() != -1 && inBoxY() != -1 && !revealed[inBoxX()][inBoxY()])
+          flagged[inBoxX()][inBoxY()] = !flagged[inBoxX()][inBoxY()];
+      }
+
     }
 
     @Override
