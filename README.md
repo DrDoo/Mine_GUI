@@ -1,2 +1,2 @@
-# Minesweeper
-Building Minesweeper from scratch in a GUI
+# Mine_GUI
+Building a minesweeper GUI from scratch
